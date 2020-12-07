@@ -58,7 +58,6 @@ def parse_file(path):
                 child_bag = upsert_bag(bags, bag_color)
 
                 bag.contents.append(BagContent(child_bag, int(count)))
-
                 child_bag.contained_in.append(bag)
 
     return bags
