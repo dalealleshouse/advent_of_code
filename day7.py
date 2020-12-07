@@ -6,7 +6,6 @@ BAG_PARSER = re.compile('(?P<color>[\w\s]+) bags contain '
 
 CONTENT_PARSER = re.compile('(?P<count>\d+) (?P<color>[\w\s]+) bag')
 
-
 BagContent = collections.namedtuple('BagContent', ['bag', 'count'])
 Bag = collections.namedtuple('Bag', ['color', 'contents', 'contained_in'])
 
@@ -19,22 +18,17 @@ def upsert_bag(bags, bag_color):
     return bags[bag_color]
 
 
-def unique_parents(bags, bag_color):
-    parents = set()
-    bag = bags[bag_color]
-
+def unique_parents(bags, bag):
     parents = {x.color for x in bag.contained_in}
-    for bag in bag.contained_in:
-        parents = parents.union(unique_parents(bags, bag.color))
+    for parent in bag.contained_in:
+        parents = parents.union(unique_parents(bags, parent))
 
     return parents
 
 
 def count_contents(bags, bag):
-    value = 0
-
+    value = sum(x.count for x in bag.contents)
     for content in bag.contents:
-        value += content.count
         value += content.count * count_contents(bags, content.bag)
 
     return value
@@ -63,8 +57,7 @@ def parse_file(path):
                 count = match.group('count')
                 child_bag = upsert_bag(bags, bag_color)
 
-                content = BagContent(child_bag, int(count))
-                bag.contents.append(content)
+                bag.contents.append(BagContent(child_bag, int(count)))
 
                 child_bag.contained_in.append(bag)
 
@@ -75,7 +68,7 @@ def entry_point():
     hierarchy = parse_file('day7_input.txt')
 
     print('bags containing shiny gold bag = ',
-          len(unique_parents(hierarchy, 'shiny gold')))
+          len(unique_parents(hierarchy, hierarchy['shiny gold'])))
     # 142
 
     print('bags content count = ',
