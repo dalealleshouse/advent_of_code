@@ -34,7 +34,7 @@ def find_missing_seat(data):
 
 def parse_file(path):
     with open(path, 'r') as file_handle:
-        return [parse_seat(x) for x in file_handle.readlines()]
+        return {parse_seat(x) for x in file_handle}
 
 
 def entry_point():

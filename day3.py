@@ -18,20 +18,20 @@ def parse_file(path):
 
 
 def count_trees_on_path(pattern, graph):
-    n = len(graph)
+    graph_n = len(graph)
     x_n = len(graph[0])
     tree_count = 0
-    x = 0
-    y = 0
+    x_cor = 0
+    y_cor = 0
 
     while True:
-        x = (x + pattern.x) % x_n
-        y += pattern.y
+        x_cor = (x_cor + pattern.x) % x_n
+        y_cor += pattern.y
 
-        if y >= n:
+        if y_cor >= graph_n:
             break
 
-        if graph[y][x] == TREE:
+        if graph[y_cor][x_cor] == TREE:
             tree_count += 1
 
     return tree_count

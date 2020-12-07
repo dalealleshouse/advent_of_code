@@ -1,21 +1,21 @@
 def find_numbers_that_sum_to_value_naive(data, value):
     # O(n^2)
-    for x in data:
-        for y in data:
-            if x + y == value:
-                return (x, y)
+    for x_val in data:
+        for y_val in data:
+            if x_val + y_val == value:
+                return (x_val, y_val)
 
-    return (x, y)
+    return (0, 0)
 
 
 def find_three_numbers_that_sum_to_value_naive(data, value):
     # O(n^3)
-    n = len(data)
+    data_n = len(data)
 
-    for i in range(0, n - 2):
-        for j in range(i + 1, n - 1):
+    for i in range(0, data_n - 2):
+        for j in range(i + 1, data_n - 1):
             if data[i] + data[j] < value:
-                for k in range(j + 1, n):
+                for k in range(j + 1, data_n):
                     if data[i] + data[j] + data[k] == value:
                         return (data[i], data[j], data[k])
 
@@ -45,10 +45,10 @@ def find_numbers_that_sum_to_value(data, value):
 
 
 def find_three_numbers_that_sum_to_value(data, value):
-    n = len(data)
+    data_n = len(data)
 
     # O(n^2)
-    for i in range(0, n - 2):
+    for i in range(0, data_n - 2):
         sub_sum = value - data[i]
         sub = find_numbers_that_sum_to_value(data[i + 1:], sub_sum)
         if sub != (0, 0):
@@ -59,12 +59,12 @@ def find_three_numbers_that_sum_to_value(data, value):
 
 def read_file(path):
     with open(path, 'r') as file_handle:
-        data = [int(x) for x in file_handle.readlines()]
+        data = [int(x_val) for x_val in file_handle.readlines()]
 
     return data
 
 
-def entry_point():
+def entry_val_point():
     data = read_file('day1_input.txt')
     nums = find_numbers_that_sum_to_value(data, 2020)
 
@@ -81,4 +81,4 @@ def entry_point():
 
 
 if __name__ == '__main__':
-    entry_point()
+    entry_val_point()
