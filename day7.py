@@ -8,24 +8,12 @@ CONTENT_PARSER = re.compile('(?P<count>\d+) (?P<color>[\w\s]+) bag')
 
 
 BagContent = collections.namedtuple('BagContent', ['bag', 'count'])
-
-class Bag:
-    def __init__(self, color):
-        self.color = color
-        self.contents = []
-        self.contained_in = []
-
-    def add_contents(self, bag):
-        self.contents.append(bag)
-
-    def add_contained_in(self, bag):
-        self.contained_in.append(bag)
+Bag = collections.namedtuple('Bag', ['color', 'contents', 'contained_in'])
 
 
 def upsert_bag(bags, bag_color):
-    bag_color = bag_color.rstrip().lstrip()
     if bag_color not in bags:
-        bag = Bag(bag_color)
+        bag = Bag(bag_color, [], [])
         bags[bag_color] = bag
 
     return bags[bag_color]
@@ -34,9 +22,6 @@ def upsert_bag(bags, bag_color):
 def unique_parents(bags, bag_color):
     parents = set()
     bag = bags[bag_color]
-
-    if len(bag.contained_in) == 0:
-        return parents
 
     parents = {x.color for x in bag.contained_in}
     for bag in bag.contained_in:
@@ -47,9 +32,6 @@ def unique_parents(bags, bag_color):
 
 def count_contents(bags, bag):
     value = 0
-
-    if len(bag.contents) == 0:
-        return value
 
     for content in bag.contents:
         value += content.count
@@ -82,9 +64,9 @@ def parse_file(path):
                 child_bag = upsert_bag(bags, bag_color)
 
                 content = BagContent(child_bag, int(count))
-                bag.add_contents(content)
+                bag.contents.append(content)
 
-                child_bag.add_contained_in(bag)
+                child_bag.contained_in.append(bag)
 
     return bags
 
