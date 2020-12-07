@@ -1,14 +1,13 @@
 def parse_file(path, combinator):
-    with open(path) as f:
+    with open(path) as file_handle:
         group = []
 
-        for line in f:
-            trimed = line.rstrip()
-            if not trimed:
+        for line in [line.rstrip() for line in file_handle]:
+            if not line:
                 yield len(combinator(*group))
                 group = []
             else:
-                group.append(set(trimed))
+                group.append(set(line))
 
 
 if __name__ == '__main__':

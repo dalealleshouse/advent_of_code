@@ -14,10 +14,12 @@ def find_three_numbers_that_sum_to_value_naive(data, value):
 
     for i in range(0, n - 2):
         for j in range(i + 1, n - 1):
-            if(data[i] + data[j] < value):
+            if data[i] + data[j] < value:
                 for k in range(j + 1, n):
                     if data[i] + data[j] + data[k] == value:
                         return (data[i], data[j], data[k])
+
+    return (0, 0, 0)
 
 
 def find_numbers_that_sum_to_value(data, value):
@@ -28,7 +30,7 @@ def find_numbers_that_sum_to_value(data, value):
     low = 0
     high = len(data) - 1
 
-    while(low < high):
+    while low < high:
         _sum = data[low] + data[high]
 
         if _sum == value:
@@ -43,7 +45,6 @@ def find_numbers_that_sum_to_value(data, value):
 
 
 def find_three_numbers_that_sum_to_value(data, value):
-    # O(n^3)
     n = len(data)
 
     # O(n^2)
@@ -57,13 +58,13 @@ def find_three_numbers_that_sum_to_value(data, value):
 
 
 def read_file(path):
-    with open(path, 'r') as f:
-        data = [int(x) for x in f.readlines()]
+    with open(path, 'r') as file_handle:
+        data = [int(x) for x in file_handle.readlines()]
 
     return data
 
 
-if __name__ == '__main__':
+def entry_point():
     data = read_file('day1_input.txt')
     nums = find_numbers_that_sum_to_value(data, 2020)
 
@@ -77,3 +78,7 @@ if __name__ == '__main__':
     print(nums[0] * nums[1] * nums[2])
     # (254, 787, 979)
     # 195700142
+
+
+if __name__ == '__main__':
+    entry_point()

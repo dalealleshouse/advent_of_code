@@ -7,32 +7,15 @@ SeatAssignment = collections.namedtuple('SeatAssignment',
 
 
 def parse_seat(seat_code):
-    row_count = 128
-    row = 127
-
-    for i in range(0, 7):
-        row_count /= 2
-
-        if seat_code[i] == 'F':
-            row -= row_count
-
-    seat_count = 8
-    seat = 7
-    for i in range(7, 10):
-        seat_count /= 2
-
-        if seat_code[i] == 'L':
-            seat -= seat_count
-
-    row = int(row)
-    seat = int(seat)
+    row = int(seat_code[:7].replace('B', '1').replace('F', '0'), 2)
+    seat = int(seat_code[7:].replace('R', '1').replace('L', '0'), 2)
     return SeatAssignment(row, seat, row * 8 + seat)
 
 
 def find_missing_seat(data):
     sorted_data = sorted(data, key=lambda x: x.row)
 
-    grouped_by_row = itertools.groupby([x for x in sorted_data],
+    grouped_by_row = itertools.groupby((x for x in sorted_data),
                                        key=lambda x: x.row)
 
     seat_sets = [(row[0], set(x.seat for x in row[1]))
@@ -50,11 +33,11 @@ def find_missing_seat(data):
 
 
 def parse_file(path):
-    with open(path, 'r') as f:
-        return [parse_seat(x) for x in f.readlines()]
+    with open(path, 'r') as file_handle:
+        return [parse_seat(x) for x in file_handle.readlines()]
 
 
-if __name__ == '__main__':
+def entry_point():
     data = parse_file('day5_input.txt')
 
     print("highest id = ", max(data, key=lambda x: x.id))
@@ -62,3 +45,7 @@ if __name__ == '__main__':
 
     print("my seat = ", find_missing_seat(data))
     # 646
+
+
+if __name__ == '__main__':
+    entry_point()

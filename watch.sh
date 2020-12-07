@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-inotify-hookable -q -w ./ -C "\.py$=$1"
+inotify-hookable -q -w ./ -C "\.py$=""clear && python $1"""

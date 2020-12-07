@@ -8,11 +8,11 @@ Pattern = collections.namedtuple('Pattern', ['x', 'y'])
 def parse_file(path):
     graph = []
 
-    with open(path, 'r') as f:
-        for row, line in enumerate(f):
+    with open(path, 'r') as file_handle:
+        for row, line in enumerate(file_handle):
             graph.append([])
-            for column, c in enumerate(line.rstrip()):
-                graph[row].append(c)
+            for char in line.rstrip():
+                graph[row].append(char)
 
     return graph
 
@@ -37,7 +37,7 @@ def count_trees_on_path(pattern, graph):
     return tree_count
 
 
-if __name__ == '__main__':
+def entry_point():
     graph = parse_file('day3_input.txt')
     print(count_trees_on_path(Pattern(3, 1), graph))
     # 242
@@ -52,3 +52,7 @@ if __name__ == '__main__':
 
     print(running_product)
     # 2265549792
+
+
+if __name__ == '__main__':
+    entry_point()
