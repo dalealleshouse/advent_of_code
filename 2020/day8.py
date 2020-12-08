@@ -68,7 +68,7 @@ def find_bad_instruction(instructions):
         if inst.op == 'term':
             break
 
-        while inst.op != 'jmp' and inst.op != 'nop':
+        while inst.op not in ['jmp', 'nop', 'term']:
             mod_line += 1
             inst = get_inst(instructions, mod_line)
 
