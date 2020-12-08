@@ -27,8 +27,10 @@ def get_inst(instructions, line_no):
 def print_result(result):
     if result[0] == 0:
         print("Program Finished =", result[1])
-    else:
+    elif result[0] == -1:
         print("Loop Detected =", result[1])
+    else:
+        print("Error =", result[1])
 
 
 def execute(instructions, instruction_getter=get_inst):
@@ -48,7 +50,6 @@ def execute(instructions, instruction_getter=get_inst):
 def find_bad_instruction(instructions):
     """
     I opted for brute force rather than trying to solve the halting problem.
-    However, there are much more efficent solutions...
     """
     mod_line = 1
 
@@ -56,21 +57,28 @@ def find_bad_instruction(instructions):
         inst = get_inst(instructions, line_no)
 
         if line_no == mod_line:
-            if inst.op == 'nop':
-                return Instruction('jmp', inst.arg)
-
-            if inst.op == 'jmp':
-                return Instruction('nop', inst.arg)
+            mod_op = ('jmp', 'nop')[inst.op == 'jmp']
+            return Instruction(mod_op, inst.arg)
 
         return inst
 
-    while mod_line < 634:
+    while True:
+        inst = get_inst(instructions, mod_line)
+
+        if inst.op == 'term':
+            break
+
+        while inst.op != 'jmp' and inst.op != 'nop':
+            mod_line += 1
+            inst = get_inst(instructions, mod_line)
+
         result = execute(instructions, get_mod_inst)
         if result[0] == 0:
             return result
+
         mod_line += 1
 
-    return (0, Enviornment(0, 0))
+    return (-2, Enviornment(0, 0))
 
 
 def entry_point():
