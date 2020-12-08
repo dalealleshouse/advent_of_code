@@ -28,29 +28,57 @@ def execute_instruction(inst, env):
     return INSTRCUTIONS[inst.op](inst.arg, env)
 
 
-def execute(instructions):
+def print_result(result):
+    if result[0] == 0:
+        print("Program Finished =", result[1])
+    else:
+        print("Loop Detected =", result[1])
+
+
+def execute(instructions, instruction_getter=get_inst):
     loop_detector = {}
 
     env = Enviornment(1, 0)
     while env.pc != -1:
-        # print(env)
         loop_detector[env.pc] = True
-        inst = get_inst(instructions, env.pc)
-        # print(inst)
+        inst = instruction_getter(instructions, env.pc)
         env = execute_instruction(inst, env)
         if env.pc in loop_detector:
-            print("Loop Detected", env)
-            return
+            return (-1, env)
 
-    print("Program Finished", env)
+    return (0, env)
+
+
+def find_bad_instruction(instructions):
+    mod_line = 1
+
+    def get_mod_inst(instructions, line_no):
+        inst = get_inst(instructions, line_no)
+
+        if line_no == mod_line:
+            if inst.op == 'nop':
+                return Instruction('jmp', inst.arg)
+
+            if inst.op == 'jmp':
+                return Instruction('nop', inst.arg)
+
+        return inst
+
+    while mod_line < 634:
+        result = execute(instructions, get_mod_inst)
+        if result[0] == 0:
+            return result
+        mod_line += 1
+
+    return (0, Enviornment(0, 0))
 
 
 def entry_point():
-    execute('day8_input.txt')
+    print_result(execute('day8_input.txt'))
     # 1684
 
-    execute('day8_input_repaired.txt')
-    # 1684
+    print_result(find_bad_instruction('day8_input.txt'))
+    # 2188
 
 
 if __name__ == '__main__':
