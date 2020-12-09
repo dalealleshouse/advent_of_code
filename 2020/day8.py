@@ -5,7 +5,7 @@ import collections
 Enviornment = collections.namedtuple('Enviornment', ['ip', 'acc'])
 Instruction = collections.namedtuple('Instruction', ['op', 'arg'])
 
-INSTRUCTION_PARSER = re.compile('(?P<op>[\w]{3}) (?P<arg>[+,-][\d]+)')
+INSTRUCTION_PARSER = re.compile(r'(?P<op>[\w]{3}) (?P<arg>[+,-][\d]+)')
 
 INSTRCUTIONS = {
     'nop': lambda arg, env: Enviornment(env.ip + 1, env.acc),
@@ -26,11 +26,11 @@ def get_inst(instructions, line_no):
 
 def print_result(result):
     if result[0] == 0:
-        print("Program Finished =", result[1])
+        print(f'Program Finished = {result[1]}')
     elif result[0] == -1:
-        print("Loop Detected =", result[1])
+        print(f'Loop Detected = {result[1]}')
     else:
-        print("Error =", result[1])
+        print(f'Error = {result[1]}')
 
 
 def execute(instructions, instruction_getter=get_inst):

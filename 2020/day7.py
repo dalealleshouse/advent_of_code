@@ -1,10 +1,10 @@
 import re
 import collections
 
-BAG_PARSER = re.compile('(?P<color>[\w\s]+) bags contain '
-                        '(?P<contents>[\w\s,]+)')
+BAG_PARSER = re.compile(r'(?P<color>[\w\s]+) bags contain '
+                        r'(?P<contents>[\w\s,]+)')
 
-CONTENT_PARSER = re.compile('(?P<count>\d+) (?P<color>[\w\s]+) bag')
+CONTENT_PARSER = re.compile(r'(?P<count>\d+) (?P<color>[\w\s]+) bag')
 
 BagContent = collections.namedtuple('BagContent', ['bag', 'count'])
 Bag = collections.namedtuple('Bag', ['color', 'contents', 'contained_in'])

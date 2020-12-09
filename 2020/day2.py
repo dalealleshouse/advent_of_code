@@ -3,8 +3,8 @@ import collections
 
 PasswordPolicy = collections.namedtuple('Password', ['letter', 'max', 'min',
                                                      'password'])
-LINE_PARSE_RE = re.compile('(?P<min>\d+)-(?P<max>\d+) (?P<letter>[a-z]): '
-                           '(?P<passwrd>[a-z]+)')
+LINE_PARSE_RE = re.compile(r'(?P<min>\d+)-(?P<max>\d+) (?P<letter>[a-z]): '
+                           r'(?P<passwrd>[a-z]+)')
 
 
 def parse_line(line):

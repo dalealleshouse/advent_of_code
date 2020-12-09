@@ -1,8 +1,9 @@
 import re
 import itertools
 
-HEIGHT_PARSER = re.compile('(?P<units>\d+)(?P<unit_type>\w+)')
-HAIR_COLOR_PARSER = re.compile('^#[\w]{6}$')
+HEIGHT_PARSER = re.compile(r'(?P<units>\d+)(?P<unit_type>\w+)')
+HAIR_COLOR_PARSER = re.compile(r'^#[0-9a-f]{6}$')
+PID_PARSER = re.compile(r'^[\d]{9}$')
 VALID_COLORS = ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']
 
 
@@ -18,7 +19,7 @@ def number_is_between(value, min_val, max_val):
 
 
 def validate_height(value):
-    match = re.search(HEIGHT_PARSER, value)
+    match = HEIGHT_PARSER.search(value)
 
     units = match.group('units')
     unit_type = match.group('unit_type')
@@ -41,32 +42,27 @@ FIELDS = {
                          lambda x: number_is_between(x, 2020, 2030)),
     'hgt': field_factory('Height', validate_height),
     'hcl': field_factory('Hair Color',
-                         lambda x: re.match(HAIR_COLOR_PARSER, x) is not None),
+                         lambda x: HAIR_COLOR_PARSER.match(x) is not None),
     'ecl': field_factory('Eye Color',
                          lambda x: x in VALID_COLORS),
     'pid': field_factory('Passport ID',
-                         lambda x: x.isnumeric() and len(x) == 9),
+                         lambda x: PID_PARSER.match(x) is not None),
     'cid': field_factory('Country ID', lambda x: True, False)
 }
 
-
-def is_valid_exists(passport):
-    for key, value in FIELDS.items():
-        if key not in passport and value['is_req'] is True:
-            return False
-
-    return True
+REQUIRED_FIELDS = {key for key, value in FIELDS.items()
+                   if value['is_req'] is True}
 
 
-def is_valid_by_values(passport):
-    for key, value in FIELDS.items():
-        if (value['is_req'] is True
-            and ((key not in passport)
-                 or (value['validate_func'](passport[key]) is False)
-                 )):
-            return False
+def all_items_exist(passport):
+    return len(REQUIRED_FIELDS - set(passport)) == 0
 
-    return True
+
+def all_items_valid(passport):
+    return (all_items_exist(passport)
+            and all(
+                key not in passport or value['validate_func'](passport[key])
+                for key, value in FIELDS.items()))
 
 
 def count_good_passports(data, valid_func):
@@ -92,10 +88,10 @@ def parse_file(path):
 def entry_point():
     data, data2 = itertools.tee(parse_file('day4_input.txt'))
 
-    print(count_good_passports(data, is_valid_exists))
+    print(count_good_passports(data, all_items_exist))
     # 256
 
-    print(count_good_passports(data2, is_valid_by_values))
+    print(count_good_passports(data2, all_items_valid))
     # 198
 
 

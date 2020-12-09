@@ -11,25 +11,20 @@ def find_first_invalid_number(data, preamble_n):
     return 0
 
 
-def contigious_numbers_that_sum_to_value(data, value):
+def contiguous_numbers_that_sum_to_value(data, value):
     nums = []
     for i, num in enumerate(data):
         nums = [num]
-
         running_sum = num
-        j = i + 1
+
+        j = i
         while running_sum < value:
+            j += 1
             nums.append(data[j])
             running_sum += data[j]
 
             if running_sum == value:
                 return nums
-
-            j += 1
-
-
-def add_low_high(data):
-    return min(data) + max(data)
 
 
 def read_file(path):
@@ -41,11 +36,11 @@ def entry_point():
     data = read_file('day9_input.txt')
 
     invalid_number = find_first_invalid_number(data, 25)
-    print("First Invalid Number =", invalid_number)
+    print(f'First Invalid Number = {invalid_number}')
     # 3199139634
 
-    nums = contigious_numbers_that_sum_to_value(data, invalid_number)
-    print("High + Low = ", add_low_high(nums))
+    nums = contiguous_numbers_that_sum_to_value(data, invalid_number)
+    print(f'High + Low = {min(nums) + max(nums)}')
     # 438559930
 
 
