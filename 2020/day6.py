@@ -12,9 +12,9 @@ def parse_file(path, combinator):
 
 if __name__ == '__main__':
     data = parse_file('day6_input.txt', set.union)
-    print("sum = ", sum(x for x in data))
+    print(f'sum = {sum(x for x in data)}')
     # 6583
 
     data = parse_file('day6_input.txt', set.intersection)
-    print("sum by group = ", sum(x for x in data))
+    print(f'sum by group = {sum(x for x in data)}')
     # 3290

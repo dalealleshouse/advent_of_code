@@ -22,10 +22,10 @@ def parse_file(path):
 def entry_point():
     data = parse_file('day5_input.txt')
 
-    print("highest id = ", max(data))
+    print(f'highest id = {max(data)}')
     # 974
 
-    print("my seat = ", find_missing_seat(data))
+    print(f'my seat = {find_missing_seat(data)}')
     # 646
 
 

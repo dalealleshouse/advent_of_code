@@ -68,14 +68,14 @@ def entry_val_point():
     data = read_file('day1_input.txt')
     nums = find_numbers_that_sum_to_value(data, 2020)
 
-    print("Two numbers that sum to 2020 = ", nums)
-    print(nums[0] * nums[1])
+    print(f'Two numbers that sum to 2020 = {nums}')
+    print(f'Product = {nums[0] * nums[1]}')
     # (696, 1324)
     # 921504
 
     nums = find_three_numbers_that_sum_to_value(data, 2020)
-    print("Three numbers that sum to 2020 = ", nums)
-    print(nums[0] * nums[1] * nums[2])
+    print(f'Three numbers that sum to 2020 = {nums}')
+    print(f'Product = {nums[0] * nums[1] * nums[2]}')
     # (254, 787, 979)
     # 195700142
 

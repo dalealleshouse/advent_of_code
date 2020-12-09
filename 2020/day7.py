@@ -66,11 +66,11 @@ def parse_file(path):
 def entry_point():
     hierarchy = parse_file('day7_input.txt')
 
-    print('bags containing shiny gold bag = ',
+    print('bags containing shiny gold bag =',
           len(unique_parents(hierarchy, hierarchy['shiny gold'])))
     # 142
 
-    print('bags content count = ',
+    print('bags content count =',
           count_contents(hierarchy, hierarchy['shiny gold']))
     # 10219
 

@@ -73,13 +73,12 @@ def parse_file(path):
     with open(path) as file_handle:
         passport = {}
 
-        for line in file_handle:
-            trimed = line.rstrip()
-            if not trimed:
+        for line in [line.rstrip() for line in file_handle]:
+            if not line:
                 yield passport
                 passport = {}
             else:
-                pairs = trimed.split(" ")
+                pairs = line.split(" ")
                 for pair in pairs:
                     key_value = pair.split(':')
                     passport[key_value[0]] = key_value[1]
@@ -88,10 +87,12 @@ def parse_file(path):
 def entry_point():
     data, data2 = itertools.tee(parse_file('day4_input.txt'))
 
-    print(count_good_passports(data, all_items_exist))
+    print(f'Passwords with missing fields: '
+          f'{count_good_passports(data, all_items_exist)}')
     # 256
 
-    print(count_good_passports(data2, all_items_valid))
+    print(f'Passports with invalid data: '
+          f'{count_good_passports(data2, all_items_valid)}')
     # 198
 
 

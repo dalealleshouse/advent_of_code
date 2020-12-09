@@ -39,7 +39,7 @@ def count_trees_on_path(pattern, graph):
 
 def entry_point():
     graph = parse_file('day3_input.txt')
-    print(count_trees_on_path(Pattern(3, 1), graph))
+    print(f'Trees on path = {count_trees_on_path(Pattern(3, 1), graph)}')
     # 242
 
     paths = [Pattern(1, 1), Pattern(3, 1), Pattern(5, 1), Pattern(7, 1),
@@ -50,7 +50,7 @@ def entry_point():
         trees = count_trees_on_path(path, graph)
         running_product *= trees
 
-    print(running_product)
+    print(f'Product of trees on paths = {running_product}')
     # 2265549792
 
 

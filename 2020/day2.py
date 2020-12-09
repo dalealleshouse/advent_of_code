@@ -45,10 +45,10 @@ def count_valid(data, valid_func):
 
 def entry_point():
     data = read_file('day2_input.txt')
-    print("Min and Max counts = ", count_valid(data, is_valid_cnt))
+    print(f'Min and Max counts = {count_valid(data, is_valid_cnt)}')
     # 628
 
-    print("Position counts = ", count_valid(data, is_valid_pos))
+    print(f'Position counts = {count_valid(data, is_valid_pos)}')
     # 705
 
 
