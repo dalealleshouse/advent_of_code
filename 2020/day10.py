@@ -6,13 +6,13 @@ def count_combinations_dynamic_programming(jolts):
     combinations = [1]
 
     for i in range(1, jolts_n):
-        arrange = combinations[i-1]
+        combo = combinations[i - 1]
         j = i - 2
         while j >= 0 and jolts[i] - jolts[j] <= 3:
-            arrange += combinations[j]
+            combo += combinations[j]
             j -= 1
 
-        combinations.append(arrange)
+        combinations.append(combo)
 
     return combinations[-1]
 
