@@ -1,5 +1,6 @@
 import re
 from math import prod
+from functools import reduce
 from copy import deepcopy
 from dataclasses import dataclass, field
 
@@ -13,12 +14,18 @@ class Range:
     low: int
     high: int
 
+    def __contains__(self, value):
+        return self.low <= value <= self.high
+
 
 @dataclass
 class Rule:
     name: str
     low_range: Range
     high_range: Range
+
+    def is_valid(self, value):
+        return value in self.low_range or value in self.high_range
 
 
 @dataclass
@@ -32,28 +39,22 @@ class TicketData:
     my_ticket: Ticket = None
     tickets: list = field(default_factory=list)
 
+    def is_ticket_valid(self, ticket):
+        return self.find_invalid_values(ticket) == []
 
-def conforms_to_rule(rule, value):
-    if (rule.low_range.low <= value <= rule.low_range.high
-            or rule.high_range.low <= value <= rule.high_range.high):
-        return True
+    def find_invalid_values(self, ticket):
+        return [x for x in ticket.values if self.is_invalid(x)]
 
-    return False
+    def is_invalid(self, value):
+        return all(not x.is_valid(value) for x in self.rules)
 
 
 def find_invalid_values(ticket_data):
-    good_tickets = []
+    good_tickets = [t for t in ticket_data.tickets
+                    if ticket_data.is_ticket_valid(t)]
 
-    invalid = []
-    for ticket in ticket_data.tickets:
-        ticket_valid = True
-        for value in ticket.values:
-            if all(not conforms_to_rule(x, value) for x in ticket_data.rules):
-                invalid.append(value)
-                ticket_valid = False
-
-        if ticket_valid:
-            good_tickets.append(ticket)
+    invalid = reduce(list.__add__, [ticket_data.find_invalid_values(ticket)
+                                    for ticket in ticket_data.tickets])
 
     return invalid, TicketData(ticket_data.rules,
                                ticket_data.my_ticket, good_tickets)
@@ -76,7 +77,7 @@ def define_fields(ticket_data):
     for ticket in ticket_data.tickets:
         for i, value in enumerate(ticket.values):
             for rule in ticket_data.rules:
-                if not conforms_to_rule(rule, value):
+                if not rule.is_valid(value):
                     possiblities[i].remove(rule.name)
 
     # if a position has a single possible value, remove that possiblitity from
@@ -102,9 +103,7 @@ def print_ticket(value_map, ticket):
 
 
 def parse_file(path):
-    data = TicketData()
-
-    def parse_rule(raw):
+    def parse_rule(raw, data):
         match = RULE_PARSER.search(raw)
         rule = Rule(
             match.group('name'),
@@ -113,10 +112,10 @@ def parse_file(path):
 
         data.rules.append(rule)
 
-    def parse_my_ticket(raw):
+    def parse_my_ticket(raw, data):
         data.my_ticket = Ticket(list(map(int, raw.split(','))))
 
-    def parse_ticket(raw):
+    def parse_ticket(raw, data):
         ticket = Ticket(list(map(int, raw.split(','))))
         data.tickets.append(ticket)
 
@@ -125,6 +124,7 @@ def parse_file(path):
              'ticket': parse_ticket}
 
     mode = 'rules'
+    data = TicketData()
     with open(path) as file_handle:
         for line in file_handle:
             if line.isspace():
@@ -138,7 +138,7 @@ def parse_file(path):
                 mode = 'ticket'
                 continue
 
-            modes[mode](line)
+            modes[mode](line, data)
 
     return data
 
