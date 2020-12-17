@@ -13,7 +13,6 @@ class ConwayCube():
     state: str
     dimensions: int
     coords: tuple
-    active_neighbors: int = -1
 
     def __bool__(self):
         return self.state == ACTIVE
@@ -54,9 +53,6 @@ class ConwayCube():
 
         return set(product(*ranges))
 
-    def cache_active_neighbors(self, count: int) -> None:
-        self.active_neighbors = count
-
 
 @dataclass
 class PocketDimension():
@@ -66,11 +62,7 @@ class PocketDimension():
         return len([x for x in self.cubes if x])
 
     def active_neighbors(self, cube) -> int:
-        if cube.active_neighbors == -1:
-            cube.cache_active_neighbors(sum(
-                x.__bool__() for x in self.existing_neighbors(cube)))
-
-        return cube.active_neighbors
+        return sum(x.__bool__() for x in self.existing_neighbors(cube))
 
     def existing_neighbors(self, cube) -> List[ConwayCube]:
         if cube.dimensions == 3:
@@ -100,16 +92,17 @@ class PocketDimension():
             if neighbor in neighbors:
                 continue
 
-            blank_cube = ConwayCube(INACTIVE, cube.dimensions, neighbor)
-            neighbors.add(blank_cube)
+            neighbors.add(ConwayCube(INACTIVE, cube.dimensions, neighbor))
 
         return neighbors
 
     def evaluate_cube(self, cube) -> ConwayCube:
-        if not cube and self.active_neighbors(cube) == 3:
+        active_neighbors = self.active_neighbors(cube)
+
+        if not cube and active_neighbors == 3:
             return cube.set_state(ACTIVE)
 
-        if cube and self.active_neighbors(cube) not in [2, 3]:
+        if cube and active_neighbors not in [2, 3]:
             return cube.set_state(INACTIVE)
 
         return cube
@@ -117,22 +110,21 @@ class PocketDimension():
     def cycle(self) -> None:
         new_cubes = set()
 
-        for cube in self.cubes:
-            for neighbor in self.all_neighbors(cube):
-                if neighbor not in new_cubes:
-                    new_cube = self.evaluate_cube(neighbor)
-                    if new_cube:
-                        new_cubes.add(new_cube)
+        canidate_cubes = self.cubes
+        for cube in canidate_cubes:
+            canidate_cubes = canidate_cubes.union(self.all_neighbors(cube))
+
+        for cube in canidate_cubes:
+            new_cube = self.evaluate_cube(cube)
+            if new_cube:
+                new_cubes.add(new_cube)
 
         self.cubes = new_cubes
 
 
 def create_tuple(x, y, dimensions):
     # pylint: disable=invalid-name
-    values = [x, y]
-    for _ in range(2, dimensions):
-        values.append(0)
-
+    values = [x, y] + [0 for x in range(2, dimensions)]
     return tuple(values)
 
 
