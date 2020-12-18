@@ -3,6 +3,7 @@ from typing import Set
 from itertools import product
 from time import time
 
+PATH = 'day17_input.txt'
 ACTIVE = '#'
 INACTIVE = '.'
 
@@ -119,27 +120,23 @@ def parse_file(path: str, dimensions) -> PocketDimension:
     return pocket_dim
 
 
+def process_cube(path, dimensions):
+    pocket_dim = parse_file(path, dimensions)
+
+    start = time()
+    for _ in range(6):
+        pocket_dim.cycle()
+
+    end = time()
+    print(f'Active {dimensions}D Cubes {pocket_dim.active_cubes()}'
+          f' - time {end - start}')
+
+
 def main():
-    pocket_dim = parse_file('day17_input.txt', 3)
 
-    start = time()
-    for _ in range(6):
-        pocket_dim.cycle()
-
-    end = time()
-    print(f'Active 3D Cubes {pocket_dim.active_cubes()}'
-          f' - time {end - start}')
+    process_cube(PATH, 3)
     # 301
-
-    pocket_dim = parse_file('day17_input.txt', 4)
-
-    start = time()
-    for _ in range(6):
-        pocket_dim.cycle()
-
-    end = time()
-    print(f'Active 4D Cubes {pocket_dim.active_cubes()}'
-          f' - time {end - start}')
+    process_cube(PATH, 4)
     # 2424
 
 
