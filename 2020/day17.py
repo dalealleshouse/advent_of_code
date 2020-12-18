@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List
+from typing import Set
 from itertools import product
 from time import time
 
@@ -18,66 +18,48 @@ class ConwayCube():
         return self.state == ACTIVE
 
     def __eq__(self, other):
-        if isinstance(other, tuple):
-            return self.coords == other
-
         return self.coords == other.coords
 
     def __hash__(self):
         return hash(self.coords)
 
-    @property
-    def x(self) -> int:
-        return self.coords[0]
-
-    @property
-    def y(self) -> int:
-        return self.coords[1]
-
-    @property
-    def z(self) -> int:
-        return self.coords[2]
-
-    @property
-    def a(self) -> int:
-        return self.coords[3]
-
     def set_state(self, state: str) -> 'ConwayCube':
         return ConwayCube(state, self.dimensions, self.coords)
 
-    def possible_neighors(self) -> List[tuple]:
+    def possible_neighors(self) -> Set[tuple]:
         ranges = []
         for i in range(self.dimensions):
-            ranges.append(range(self.coords[i] - 1,
-                                self.coords[i] + 2))
+            ranges.append(range(self.coords[i] - 1, self.coords[i] + 2))
 
         return set(product(*ranges))
 
 
 @dataclass
 class PocketDimension():
+    dimensions: int
     cubes: set = field(default_factory=set)
 
-    def active_cubes(self) -> List[ConwayCube]:
+    def active_cubes(self) -> int:
         return len([x for x in self.cubes if x])
 
     def active_neighbors(self, cube) -> int:
         return sum(x.__bool__() for x in self.existing_neighbors(cube))
 
-    def existing_neighbors(self, cube) -> List[ConwayCube]:
+    def existing_neighbors(self, cube) -> Set[ConwayCube]:
         if cube.dimensions == 3:
             return {x for x in self.cubes
                     if cube != x
-                    and cube.x - 1 <= x.x <= cube.x + 1
-                    and cube.y - 1 <= x.y <= cube.y + 1
-                    and cube.z - 1 <= x.z <= cube.z + 1}
+                    and cube.coords[0] - 1 <= x.coords[0] <= cube.coords[0] + 1
+                    and cube.coords[1] - 1 <= x.coords[1] <= cube.coords[1] + 1
+                    and cube.coords[2] - 1 <= x.coords[2] <= cube.coords[2] + 1
+                    }
 
         return {x for x in self.cubes
                 if cube != x
-                and cube.x - 1 <= x.x <= cube.x + 1
-                and cube.y - 1 <= x.y <= cube.y + 1
-                and cube.z - 1 <= x.z <= cube.z + 1
-                and cube.a - 1 <= x.a <= cube.a + 1}
+                and cube.coords[0] - 1 <= x.coords[0] <= cube.coords[0] + 1
+                and cube.coords[1] - 1 <= x.coords[1] <= cube.coords[1] + 1
+                and cube.coords[2] - 1 <= x.coords[2] <= cube.coords[2] + 1
+                and cube.coords[3] - 1 <= x.coords[3] <= cube.coords[3] + 1}
 
         # this is generic, but it's slow
         # return {x for x in self.cubes
@@ -85,24 +67,11 @@ class PocketDimension():
         #         and all([y - 1 <= x.coords[i] <= y + 1
         #                  for i, y in enumerate(cube.coords)])}
 
-    def all_neighbors(self, cube) -> List[ConwayCube]:
-        neighbors = self.existing_neighbors(cube)
-
-        for neighbor in cube.possible_neighors():
-            if neighbor in neighbors:
-                continue
-
-            neighbors.add(ConwayCube(INACTIVE, cube.dimensions, neighbor))
-
-        return neighbors
-
     def evaluate_cube(self, cube) -> ConwayCube:
-        active_neighbors = self.active_neighbors(cube)
-
-        if not cube and active_neighbors == 3:
+        if not cube and self.active_neighbors(cube) == 3:
             return cube.set_state(ACTIVE)
 
-        if cube and active_neighbors not in [2, 3]:
+        if cube and self.active_neighbors(cube) not in [2, 3]:
             return cube.set_state(INACTIVE)
 
         return cube
@@ -110,9 +79,13 @@ class PocketDimension():
     def cycle(self) -> None:
         new_cubes = set()
 
-        canidate_cubes = self.cubes
-        for cube in canidate_cubes:
-            canidate_cubes = canidate_cubes.union(self.all_neighbors(cube))
+        canidate_cubes = set.union(
+            *[x.possible_neighors() for x in self.cubes])
+
+        canidate_cubes = map(
+            lambda x: ConwayCube(INACTIVE, self.dimensions, x), canidate_cubes)
+
+        canidate_cubes = self.cubes.union(canidate_cubes)
 
         for cube in canidate_cubes:
             new_cube = self.evaluate_cube(cube)
@@ -130,7 +103,7 @@ def create_tuple(x, y, dimensions):
 
 def parse_file(path: str, dimensions) -> PocketDimension:
     # pylint: disable=invalid-name
-    pocket_dim = PocketDimension()
+    pocket_dim = PocketDimension(dimensions)
 
     with open(path) as file_handle:
         y = 0
@@ -147,25 +120,26 @@ def parse_file(path: str, dimensions) -> PocketDimension:
 
 
 def main():
-    start = time()
     pocket_dim = parse_file('day17_input.txt', 3)
 
+    start = time()
     for _ in range(6):
         pocket_dim.cycle()
 
-    print(f'Active 3D Cubes {pocket_dim.active_cubes()}')
     end = time()
-
-    print(end - start)
+    print(f'Active 3D Cubes {pocket_dim.active_cubes()}'
+          f' - time {end - start}')
     # 301
 
-    # pocket_dim = parse_file('day17_input.txt', 4)
+    pocket_dim = parse_file('day17_input.txt', 4)
 
-    # for _ in range(6):
-    #     pocket_dim.cycle()
-    #     print(_)
+    start = time()
+    for _ in range(6):
+        pocket_dim.cycle()
 
-    # print(f'Active 4D Cubes {pocket_dim.active_cubes()}')
+    end = time()
+    print(f'Active 4D Cubes {pocket_dim.active_cubes()}'
+          f' - time {end - start}')
     # 2424
 
 
