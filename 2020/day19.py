@@ -1,5 +1,6 @@
 import re
 from dataclasses import dataclass, field
+# pylint: disable=too-few-public-methods
 
 PATH = 'day19_input.txt'
 RULE_PARSER = re.compile(r'^(?P<index>[\d]+): (?P<rule>[^\n]+)$')
@@ -7,17 +8,24 @@ SENTINEL_PARSER = re.compile(r'"(?P<char>[ab])"')
 
 
 @dataclass
-class Sentinel():
+class Rule():
+    rules: list = field(default_factory=list)
+
+    def eval(self, rules):
+        raise NotImplementedError
+
+
+class Sentinel(Rule):
     char: str
+
+    def __init__(self, char: str):
+        self.char = char
 
     def eval(self, _):
         return self.char
 
 
-@dataclass
-class Composite():
-    rules: list = field(default_factory=list)
-
+class Composite(Rule):
     def eval(self, rules):
         possible = []
 
@@ -28,7 +36,30 @@ class Composite():
         return f'({"|".join(possible)})'
 
 
-def parse_file(path):
+class Rule8(Rule):
+    def eval(self, rules):
+        # pylint: disable=no-self-use
+        # 42 | 42 8
+        return f'({rules[42].eval(rules)})+'
+
+
+class Rule11(Rule):
+    def eval(self, rules):
+        # pylint: disable=no-self-use
+        # 42 31 | 42 11 31
+        rule42 = rules[42].eval(rules)
+        rule31 = rules[31].eval(rules)
+        regex = f'(({rule42}{rule31})|({rule42}TOKEN{rule31}))'
+
+        # I simply increased the number of recursions until the number quit
+        # going up. There has to be a better way than this...
+        for _ in range(3):
+            regex = regex.replace('TOKEN', regex)
+
+        return regex
+
+
+def parse_file(path=PATH, substituter=lambda index: None):
     mode = 'rules'
     rules = {}
     checker = None
@@ -37,6 +68,11 @@ def parse_file(path):
         match = RULE_PARSER.match(raw)
         index = int(match.group('index'))
         raw_rule = match.group('rule')
+
+        substitute_rule = substituter(index)
+        if substitute_rule is not None:
+            rules[index] = substitute_rule
+            return rules
 
         sentinal = SENTINEL_PARSER.match(raw_rule)
         if sentinal is not None:
@@ -66,12 +102,28 @@ def parse_file(path):
                 yield checker, line.rstrip()
 
 
+def rule_substituter(index: int):
+    if index == 8:
+        return Rule8()
+
+    if index == 11:
+        return Rule11()
+
+    return None
+
+
 def main():
     match_count = sum(checker.match(canidate) is not None
-                      for checker, canidate in parse_file(PATH))
+                      for checker, canidate in parse_file())
 
     print(f'Number of matches patterns = {match_count}')
     # 220
+
+    match_count = sum(checker.match(canidate) is not None
+                      for checker, canidate
+                      in parse_file(PATH, rule_substituter))
+    print(f'Number of matches patterns = {match_count}')
+    # 439
 
 
 if __name__ == '__main__':
