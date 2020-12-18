@@ -126,14 +126,13 @@ def process_cube(path, dimensions):
     start = time()
     for _ in range(6):
         pocket_dim.cycle()
-
     end = time()
+
     print(f'Active {dimensions}D Cubes {pocket_dim.active_cubes()}'
           f' - time {end - start}')
 
 
 def main():
-
     process_cube(PATH, 3)
     # 301
     process_cube(PATH, 4)
