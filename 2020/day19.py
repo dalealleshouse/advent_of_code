@@ -11,7 +11,7 @@ SENTINEL_PARSER = re.compile(r'"(?P<char>[ab])"')
 class Rule():
     rules: list = field(default_factory=list)
 
-    def eval(self, rules):
+    def eval(self, rules) -> str:
         raise NotImplementedError
 
 
@@ -51,10 +51,12 @@ class Rule11(Rule):
         rule31 = rules[31].eval(rules)
         regex = f'(({rule42}{rule31})|({rule42}TOKEN{rule31}))'
 
-        # I simply increased the number of recursions until the number quit
+        # I simply increased the number of recursions until the result quit
         # going up. There has to be a better way than this...
         for _ in range(3):
             regex = regex.replace('TOKEN', regex)
+
+        regex = regex.replace('TOKEN', '')
 
         return regex
 
@@ -102,7 +104,7 @@ def parse_file(path=PATH, substituter=lambda index: None):
                 yield checker, line.rstrip()
 
 
-def rule_substituter(index: int):
+def rule_substituter(index: int) -> Rule:
     if index == 8:
         return Rule8()
 
@@ -112,17 +114,17 @@ def rule_substituter(index: int):
     return None
 
 
-def main():
+def count_matches(pattern_gen) -> None:
     match_count = sum(checker.match(canidate) is not None
-                      for checker, canidate in parse_file())
+                      for checker, canidate in pattern_gen)
+    print(f'Number of pattern matches = {match_count}')
 
-    print(f'Number of matches patterns = {match_count}')
+
+def main():
+    count_matches(parse_file(PATH))
     # 220
 
-    match_count = sum(checker.match(canidate) is not None
-                      for checker, canidate
-                      in parse_file(PATH, rule_substituter))
-    print(f'Number of matches patterns = {match_count}')
+    count_matches(parse_file(PATH, rule_substituter))
     # 439
 
 
