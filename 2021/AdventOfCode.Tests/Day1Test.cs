@@ -19,7 +19,7 @@ namespace AdventOfCode.Tests
             var data = InputParser.Parse("input_data/day1-1.txt");
             var result = Day1.CountIncreasing(data);
 
-            Assert.Equal(1559, result);
+            Assert.Equal(1688, result);
         }
 
         [Fact]
@@ -37,7 +37,7 @@ namespace AdventOfCode.Tests
             var data = InputParser.Parse("input_data/day1-1.txt");
             var result = Day1.CountIncreasingWithinSlidingWindow(data, 3);
 
-            Assert.Equal(1600, result);
+            Assert.Equal(1728, result);
         }
     }
 }
