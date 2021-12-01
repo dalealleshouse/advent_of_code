@@ -1,6 +1,5 @@
 namespace AdventOfCode.Tests
 {
-    using System;
     using Xunit;
 
     public class Day1Test
