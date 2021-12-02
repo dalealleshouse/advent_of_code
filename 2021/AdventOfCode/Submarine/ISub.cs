@@ -4,7 +4,7 @@ namespace AdventOfCode.Submarine
     {
         int HorizontalPostion { get; set; }
 
-        int Verticalpostion { get; set; }
+        int VerticalPostion { get; set; }
 
         void ProcessCommand(SubCommand command);
     }

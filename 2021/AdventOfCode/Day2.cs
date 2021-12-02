@@ -12,7 +12,7 @@ namespace AdventOfCode
                 sub.ProcessCommand(cmd);
             }
 
-            return (sub.HorizontalPostion, sub.Verticalpostion);
+            return (sub.HorizontalPostion, sub.VerticalPostion);
         }
     }
 }

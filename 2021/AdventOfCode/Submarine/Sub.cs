@@ -14,14 +14,14 @@ namespace AdventOfCode.Submarine
                 (Sub sub, int value) =>
                 {
                     sub.HorizontalPostion += value;
-                    sub.Verticalpostion += sub.Aim * value;
+                    sub.VerticalPostion += sub.Aim * value;
                 }
             },
         };
 
         public int HorizontalPostion { get; set; }
 
-        public int Verticalpostion { get; set; }
+        public int VerticalPostion { get; set; }
 
         public int Aim { get; set; }
 

@@ -7,14 +7,14 @@ namespace AdventOfCode.Submarine
     {
         private Dictionary<string, Action<SimpleSub, int>> commandDefinitions = new ()
         {
-            { "up", (SimpleSub sub, int value) => sub.Verticalpostion -= value },
-            { "down", (SimpleSub sub, int value) => sub.Verticalpostion += value },
+            { "up", (SimpleSub sub, int value) => sub.VerticalPostion -= value },
+            { "down", (SimpleSub sub, int value) => sub.VerticalPostion += value },
             { "forward", (SimpleSub sub, int value) => sub.HorizontalPostion += value },
         };
 
         public int HorizontalPostion { get; set; }
 
-        public int Verticalpostion { get; set; }
+        public int VerticalPostion { get; set; }
 
         public void ProcessCommand(SubCommand command)
         {
