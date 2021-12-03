@@ -3,9 +3,9 @@ namespace AdventOfCode
     using System.Collections.Generic;
     using AdventOfCode.Submarine;
 
-    public partial class Day2
+    public static class Day2
     {
-        public static (int, int) CalculatePosition(IEnumerable<SubCommand> commands, ISub sub)
+        public static (int HorizontalPostion, int VerticalPostion) CalculatePosition(IEnumerable<SubCommand> commands, ISub sub)
         {
             foreach (var cmd in commands)
             {

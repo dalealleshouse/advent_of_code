@@ -1,6 +1,7 @@
 namespace AdventOfCode
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using AdventOfCode.Submarine;
@@ -10,6 +11,13 @@ namespace AdventOfCode
         public static IEnumerable<int> Parse(string path) => Parse(path, int.Parse);
 
         public static IEnumerable<SubCommand> ParseCommands(string path) => Parse(path, SubCommand.Parse);
+
+        public static IEnumerable<string> ParseString(string path) => Parse(path, x => x);
+
+        public static IEnumerable<(int BitCount, BitArray Bits)> ParseBinaryString(string path) => Parse(path, x =>
+        {
+            return (x.Length, new BitArray(new int[] { Convert.ToInt32(x, 2) }));
+        });
 
         public static IEnumerable<T> Parse<T>(string path, Func<string, T> parser)
         {

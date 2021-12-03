@@ -1,6 +1,6 @@
 namespace AdventOfCode.Submarine
 {
-    public record SubCommand(string command, int value)
+    public record SubCommand(string Command, int Value)
     {
         public static SubCommand Parse(string input)
         {

@@ -5,7 +5,7 @@ namespace AdventOfCode.Submarine
 
     public class Sub : ISub
     {
-        private Dictionary<string, Action<Sub, int>> commandDefinitions = new ()
+        private Dictionary<string, Action<Sub, int>> commandDefinitions = new()
         {
             { "up", (Sub sub, int value) => sub.Aim -= value },
             { "down", (Sub sub, int value) => sub.Aim += value },
@@ -27,7 +27,7 @@ namespace AdventOfCode.Submarine
 
         public void ProcessCommand(SubCommand command)
         {
-            this.commandDefinitions[command.command](this, command.value);
+            this.commandDefinitions[command.Command](this, command.Value);
         }
     }
 }
