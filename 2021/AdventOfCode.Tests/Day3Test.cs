@@ -1,5 +1,6 @@
 namespace AdventOfCode.Tests
 {
+    using AdventOfCode.Day3;
     using Xunit;
 
     public class Day3Test
@@ -7,8 +8,8 @@ namespace AdventOfCode.Tests
         [Fact]
         public void TestInput()
         {
-            var data = InputParser.ParseBinaryString("input_data/day3-test.txt");
-            var result = Day3.PowerConsumption(data);
+            var data = Day3InputParser.ParseBinaryString("input_data/day3-test.txt");
+            var result = RatingDeviner.PowerConsumption(data);
 
             Assert.Equal((22, 9), result);
         }
@@ -16,8 +17,8 @@ namespace AdventOfCode.Tests
         [Fact]
         public void PuzzelOne()
         {
-            var data = InputParser.ParseBinaryString("input_data/day3-1.txt");
-            var result = Day3.PowerConsumption(data);
+            var data = Day3InputParser.ParseBinaryString("input_data/day3-1.txt");
+            var result = RatingDeviner.PowerConsumption(data);
 
             Assert.Equal((2277, 1818), result);
         }
@@ -25,8 +26,10 @@ namespace AdventOfCode.Tests
         [Fact]
         public void TestInputTwo()
         {
-            var o = Day3.OxygenGeneratorRating(InputParser.ParseBinaryString("input_data/day3-test.txt"));
-            var co = Day3.CO2ScrubberRating(InputParser.ParseBinaryString("input_data/day3-test.txt"));
+            var o = RatingDeviner.OxygenGeneratorRating(
+                    Day3InputParser.ParseBinaryString("input_data/day3-test.txt"));
+            var co = RatingDeviner.CO2ScrubberRating(
+                    Day3InputParser.ParseBinaryString("input_data/day3-test.txt"));
 
             Assert.Equal(23, o);
             Assert.Equal(10, co);
@@ -35,8 +38,10 @@ namespace AdventOfCode.Tests
         [Fact]
         public void PuzzelTwo()
         {
-            var o = Day3.OxygenGeneratorRating(InputParser.ParseBinaryString("input_data/day3-1.txt"));
-            var co = Day3.CO2ScrubberRating(InputParser.ParseBinaryString("input_data/day3-1.txt"));
+            var o = RatingDeviner.OxygenGeneratorRating(
+                    Day3InputParser.ParseBinaryString("input_data/day3-1.txt"));
+            var co = RatingDeviner.CO2ScrubberRating(
+                    Day3InputParser.ParseBinaryString("input_data/day3-1.txt"));
 
             Assert.Equal(2539, o);
             Assert.Equal(709, co);

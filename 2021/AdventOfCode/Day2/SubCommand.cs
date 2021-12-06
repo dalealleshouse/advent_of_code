@@ -1,4 +1,4 @@
-namespace AdventOfCode.Submarine
+namespace AdventOfCode.Day2
 {
     public record SubCommand(string Command, int Value)
     {

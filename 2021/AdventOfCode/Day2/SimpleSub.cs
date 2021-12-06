@@ -1,9 +1,9 @@
-namespace AdventOfCode.Submarine
+namespace AdventOfCode.Day2
 {
     using System;
     using System.Collections.Generic;
 
-    public class SimpleSub : ISub
+    public class SimpleSub : BaseSub
     {
         private Dictionary<string, Action<SimpleSub, int>> commandDefinitions = new()
         {
@@ -12,11 +12,7 @@ namespace AdventOfCode.Submarine
             { "forward", (SimpleSub sub, int value) => sub.HorizontalPostion += value },
         };
 
-        public int HorizontalPostion { get; set; }
-
-        public int VerticalPostion { get; set; }
-
-        public void ProcessCommand(SubCommand command)
+        public override void ProcessCommand(SubCommand command)
         {
             this.commandDefinitions[command.Command](this, command.Value);
         }

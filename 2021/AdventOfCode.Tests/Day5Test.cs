@@ -8,7 +8,7 @@ namespace AdventOfCode.Tests
         [Fact]
         public void TestInput()
         {
-            var segments = InputParser.ParseSegments("input_data/day5-test.txt");
+            var segments = Day5InputParser.ParseSegments("input_data/day5-test.txt");
             var g = new Grid(10);
             g.LoadHVLineSegments(segments);
 
@@ -18,7 +18,7 @@ namespace AdventOfCode.Tests
         [Fact]
         public void PuzzelOne()
         {
-            var segments = InputParser.ParseSegments("input_data/day5-1.txt");
+            var segments = Day5InputParser.ParseSegments("input_data/day5-1.txt");
             var g = new Grid(1000);
             g.LoadHVLineSegments(segments);
 
@@ -28,7 +28,7 @@ namespace AdventOfCode.Tests
         [Fact]
         public void TestInputTwo()
         {
-            var segments = InputParser.ParseSegments("input_data/day5-test.txt");
+            var segments = Day5InputParser.ParseSegments("input_data/day5-test.txt");
             var g = new Grid(10);
             g.LoadLineSegments(segments);
 
@@ -38,7 +38,7 @@ namespace AdventOfCode.Tests
         [Fact]
         public void PuzzelTwo()
         {
-            var segments = InputParser.ParseSegments("input_data/day5-1.txt");
+            var segments = Day5InputParser.ParseSegments("input_data/day5-1.txt");
             var g = new Grid(1000);
             g.LoadLineSegments(segments);
 
