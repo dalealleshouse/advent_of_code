@@ -7,6 +7,7 @@ namespace AdventOfCode
     using System.Linq;
     using System.Text.RegularExpressions;
     using AdventOfCode.Day5;
+    using AdventOfCode.Day6;
     using AdventOfCode.Submarine;
 
     public static class InputParser
@@ -21,6 +22,21 @@ namespace AdventOfCode
         {
             return (x.Length, new BitArray(new int[] { Convert.ToInt32(x, 2) }));
         });
+
+        public static IEnumerable<LaternFish> ParseDelimited(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException($"'{nameof(path)}' cannot be null or empty.", nameof(path));
+            }
+
+            if (!File.Exists(path))
+            {
+                throw new ArgumentException($"'{path}' not found.", nameof(path));
+            }
+
+            return File.ReadLines(path).First().Split(',').Select(x => new LaternFish(int.Parse(x)));
+        }
 
         public static Bingo ParseBingo(string path)
         {
