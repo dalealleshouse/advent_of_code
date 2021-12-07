@@ -1,61 +1,44 @@
 namespace AdventOfCode.Tests
 {
+    using AdventOfCode.Day7;
+    using Xunit;
+
     public class Day7Test
     {
-        /* [Fact] */
-        /* public void TestInput() */
-        /* { */
-        /*     var fish = InputParser.ParseDelimited("input_data/day6-test.txt"); */
-        /*     var school = new LaternFishSchool(fish); */
+        [Fact]
+        public void TestInput()
+        {
+            var data = InputParser.ParseDelimited("input_data/day7-test.txt");
+            var optimizer = new FuelOptimizer(data);
 
-        /*     for (int i = 0; i < 80; i++) */
-        /*     { */
-        /*         school.SimulateDay(); */
-        /*     } */
+            Assert.Equal(37, optimizer.OptimalFuelConsumption());
+        }
 
-        /*     Assert.Equal(5934, school.SchoolSize()); */
-        /* } */
+        [Fact]
+        public void PuzzelOne()
+        {
+            var data = InputParser.ParseDelimited("input_data/day7-1.txt");
+            var optimizer = new FuelOptimizer(data);
 
-        /* [Fact] */
-        /* public void PuzzelOne() */
-        /* { */
-        /*     var fish = InputParser.ParseDelimited("input_data/day6-1.txt"); */
-        /*     var school = new LaternFishSchool(fish); */
+            Assert.Equal(328187, optimizer.OptimalFuelConsumption());
+        }
 
-        /*     for (int i = 0; i < 80; i++) */
-        /*     { */
-        /*         school.SimulateDay(); */
-        /*     } */
+        [Fact]
+        public void TestInputTwo()
+        {
+            var data = InputParser.ParseDelimited("input_data/day7-test.txt");
+            var optimizer = new FuelOptimizer(data);
 
-        /*     Assert.Equal(394994, school.SchoolSize()); */
-        /* } */
+            Assert.Equal(168, optimizer.OptimalCompoundFuelConsumption());
+        }
 
-        /* [Fact] */
-        /* public void TestInputTwo() */
-        /* { */
-        /*     var fish = InputParser.ParseDelimited("input_data/day6-test.txt"); */
-        /*     var school = new LaternFishSchool(fish); */
+        [Fact]
+        public void PuzzelTwo()
+        {
+            var data = InputParser.ParseDelimited("input_data/day7-1.txt");
+            var optimizer = new FuelOptimizer(data);
 
-        /*     for (int i = 0; i < 256; i++) */
-        /*     { */
-        /*         school.SimulateDay(); */
-        /*     } */
-
-        /*     Assert.Equal(26984457539, school.SchoolSize()); */
-        /* } */
-
-        /* [Fact] */
-        /* public void PuzzelTwo() */
-        /* { */
-        /*     var fish = InputParser.ParseDelimited("input_data/day6-1.txt"); */
-        /*     var school = new LaternFishSchool(fish); */
-
-        /*     for (int i = 0; i < 256; i++) */
-        /*     { */
-        /*         school.SimulateDay(); */
-        /*     } */
-
-        /*     Assert.Equal(1765974267455, school.SchoolSize()); */
-        /* } */
+            Assert.Equal(91257582, optimizer.OptimalCompoundFuelConsumption());
+        }
     }
 }
