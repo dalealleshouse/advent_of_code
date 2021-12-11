@@ -1,5 +1,6 @@
 namespace AdventOfCode.Tests
 {
+    using AdventOfCode.Day11;
     using Xunit;
 
     public class Day11Test
@@ -7,37 +8,37 @@ namespace AdventOfCode.Tests
         [Fact]
         public void TestInput()
         {
-            /* var data = InputParser.ParseString("input_data/day10-test.txt"); */
-            /* var sut = new SyntaxChecker(data); */
+            var data = Day11InputParser.ParseGrid("input_data/day11-test.txt");
+            var sut = new OctopiGrid(data, 10);
 
-            /* Assert.Equal(26397, sut.CalculateIncompleteScore()); */
+            Assert.Equal(1656, sut.Cycle(100));
         }
 
-        /* [Fact] */
-        /* public void PuzzelOne() */
-        /* { */
-        /*     var data = InputParser.ParseString("input_data/day10-1.txt"); */
-        /*     var sut = new SyntaxChecker(data); */
+        [Fact]
+        public void PuzzelOne()
+        {
+            var data = Day11InputParser.ParseGrid("input_data/day11-1.txt");
+            var sut = new OctopiGrid(data, 10);
 
-        /*     Assert.Equal(387363, sut.CalculateIncompleteScore()); */
-        /* } */
+            Assert.Equal(1743, sut.Cycle(100));
+        }
 
-        /* [Fact] */
-        /* public void TestInputTwo() */
-        /* { */
-        /*     var data = InputParser.ParseString("input_data/day10-test.txt"); */
-        /*     var sut = new SyntaxChecker(data); */
+        [Fact]
+        public void TestInputTwo()
+        {
+            var data = Day11InputParser.ParseGrid("input_data/day11-test.txt");
+            var sut = new OctopiGrid(data, 10);
 
-        /*     Assert.Equal(288957, sut.AutoCompleteScore()); */
-        /* } */
+            Assert.Equal(195, sut.FirstFullFlash());
+        }
 
-        /* [Fact] */
-        /* public void PuzzelTwo() */
-        /* { */
-        /*     var data = InputParser.ParseString("input_data/day10-1.txt"); */
-        /*     var sut = new SyntaxChecker(data); */
+        [Fact]
+        public void PuzzelTwo()
+        {
+            var data = Day11InputParser.ParseGrid("input_data/day11-1.txt");
+            var sut = new OctopiGrid(data, 10);
 
-        /*     Assert.Equal(4330777059, sut.AutoCompleteScore()); */
-        /* } */
+            Assert.Equal(364, sut.FirstFullFlash());
+        }
     }
 }
