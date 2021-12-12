@@ -1,43 +1,40 @@
 namespace AdventOfCode.Tests
 {
+    using AdventOfCode.Day12;
     using Xunit;
 
     public class Day12Test
     {
-        /* [Fact] */
-        /* public void TestInput() */
-        /* { */
-        /*     var data = Day11InputParser.ParseGrid("input_data/day11-test.txt"); */
-        /*     var sut = new OctopiGrid(data, 10); */
+        [Fact]
+        public void TestInput()
+        {
+            var sut = new CaveGraph(InputParser.ParseString("input_data/day12-test.txt"));
 
-        /*     Assert.Equal(1656, sut.Cycle(100)); */
-        /* } */
+            Assert.Equal(10, sut.FindPaths());
+        }
 
-        /* [Fact] */
-        /* public void PuzzelOne() */
-        /* { */
-        /*     var data = Day11InputParser.ParseGrid("input_data/day11-1.txt"); */
-        /*     var sut = new OctopiGrid(data, 10); */
+        [Fact]
+        public void PuzzelOne()
+        {
+            var sut = new CaveGraph(InputParser.ParseString("input_data/day12-1.txt"));
 
-        /*     Assert.Equal(1743, sut.Cycle(100)); */
-        /* } */
+            Assert.Equal(4495, sut.FindPaths());
+        }
 
-        /* [Fact] */
-        /* public void TestInputTwo() */
-        /* { */
-        /*     var data = Day11InputParser.ParseGrid("input_data/day11-test.txt"); */
-        /*     var sut = new OctopiGrid(data, 10); */
+        [Fact]
+        public void TestInputTwo()
+        {
+            var sut = new CaveGraph(InputParser.ParseString("input_data/day12-test.txt"));
 
-        /*     Assert.Equal(195, sut.FirstFullFlash()); */
-        /* } */
+            Assert.Equal(36, sut.FindPaths2());
+        }
 
-        /* [Fact] */
-        /* public void PuzzelTwo() */
-        /* { */
-        /*     var data = Day11InputParser.ParseGrid("input_data/day11-1.txt"); */
-        /*     var sut = new OctopiGrid(data, 10); */
+        [Fact]
+        public void PuzzelTwo()
+        {
+            var sut = new CaveGraph(InputParser.ParseString("input_data/day12-1.txt"));
 
-        /*     Assert.Equal(364, sut.FirstFullFlash()); */
-        /* } */
+            Assert.Equal(131254, sut.FindPaths2());
+        }
     }
 }
