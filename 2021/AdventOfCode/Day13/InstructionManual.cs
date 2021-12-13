@@ -48,16 +48,13 @@ namespace AdventOfCode.Day13
             this.FoldManual(this.folds.First());
 
             var count = 0;
-            for (int x = 0; x < this.maxX; x++)
+            this.Enumerate((x, y) =>
             {
-                for (int y = 0; y < this.maxY; y++)
+                if (this.grid[y, x] == '#')
                 {
-                    if (this.grid[y, x] == '#')
-                    {
-                        count++;
-                    }
+                    count++;
                 }
-            }
+            });
 
             return count;
         }
@@ -89,41 +86,32 @@ namespace AdventOfCode.Day13
 
             this.grid = new char[this.maxY, this.maxX];
 
-            for (int x = 0; x < this.maxX; x++)
+            this.Enumerate((x, y) =>
             {
-                for (int y = 0; y < this.maxY; y++)
-                {
-                    this.grid[y, x] = oldGrid[y, x];
-                }
-            }
+                this.grid[y, x] = oldGrid[y, x];
+            });
 
             if (fold.Direction == "y")
             {
-                for (int x = 0; x < this.maxX; x++)
+                this.Enumerate((x, y) =>
                 {
-                    for (int y = 0; y < this.maxY; y++)
+                    var oldy = oldMaxY - y - 1;
+                    if (oldGrid[oldy, x] == '#')
                     {
-                        var oldy = oldMaxY - y - 1;
-                        if (oldGrid[oldy, x] == '#')
-                        {
-                            this.SetGridValue(x, y);
-                        }
+                        this.SetGridValue(x, y);
                     }
-                }
+                });
             }
             else
             {
-                for (int x = 0; x < this.maxX; x++)
+                this.Enumerate((x, y) =>
                 {
-                    for (int y = 0; y < this.maxY; y++)
+                    var oldx = oldMaxX - x - 1;
+                    if (oldGrid[y, oldx] == '#')
                     {
-                        var oldx = oldMaxX - x - 1;
-                        if (oldGrid[y, oldx] == '#')
-                        {
-                            this.SetGridValue(x, y);
-                        }
+                        this.SetGridValue(x, y);
                     }
-                }
+                });
             }
         }
 
@@ -131,9 +119,21 @@ namespace AdventOfCode.Day13
 
         private char GridValue(int x, int y) => this.grid[y, x] == default(char) ? '.' : this.grid[y, x];
 
+        private void Enumerate(Action<int, int> action)
+        {
+            for (int x = 0; x < this.maxX; x++)
+            {
+                for (int y = 0; y < this.maxY; y++)
+                {
+                    action(x, y);
+                }
+            }
+        }
+
         private void PrintGrid()
         {
             Console.WriteLine($"{this.maxX}-{this.maxY}");
+
             for (int y = 0; y < this.maxY; y++)
             {
                 for (int x = 0; x < this.maxX; x++)
