@@ -13,21 +13,20 @@ namespace AdventOfCode.Day14
 
         public PolymerSolver(IEnumerable<string> data)
         {
-            var first = true;
+            var firstLine = true;
 
             foreach (var d in data)
             {
-                if (first)
+                if (firstLine)
                 {
                     this.template = d;
                     for (int i = 1; i < d.Length; i++)
                     {
                         var p = $"{d[i - 1]}{d[i]}";
-                        var c = this.pairMap.GetValueOrDefault(p, 0) + 1;
-                        this.pairMap[p] = c;
+                        this.pairMap[p] = this.pairMap.GetValueOrDefault(p, 0) + 1;
                     }
 
-                    first = false;
+                    firstLine = false;
                     continue;
                 }
 
