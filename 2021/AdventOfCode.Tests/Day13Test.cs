@@ -21,11 +21,11 @@ namespace AdventOfCode.Tests
             Assert.Equal(671, sut.FirstFold());
         }
 
-        /* [Fact] */
-        /* public void PuzzelTwo() */
-        /* { */
-        /*     var sut = new InstructionManual(InputParser.ParseString("input_data/day13-1.txt")); */
-        /*     sut.AllFolds(); */
-        /* } */
+        [Fact(Skip = "Avoid conole output")]
+        public void PuzzelTwo()
+        {
+            var sut = new InstructionManual(InputParser.ParseString("input_data/day13-1.txt"));
+            sut.AllFolds();
+        }
     }
 }
