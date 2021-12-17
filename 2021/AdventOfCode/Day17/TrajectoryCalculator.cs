@@ -4,13 +4,13 @@ namespace AdventOfCode.Day17
 
     public class TrajectoryCalculator
     {
-        private readonly (int Min, int Max) xRange;
-        private readonly (int Min, int Max) yRange;
+        private readonly Range xRange;
+        private readonly Range yRange;
 
         public TrajectoryCalculator((int Min, int Max) xRange, (int Min, int Max) yRange)
         {
-            this.xRange = xRange;
-            this.yRange = yRange;
+            this.xRange = new Range(xRange.Min, xRange.Max);
+            this.yRange = new Range(yRange.Min, yRange.Max);
         }
 
         public int DistinctVelocity() => this.BruteForce().Unique;
@@ -58,9 +58,9 @@ namespace AdventOfCode.Day17
             var yspace = this.GetSearchSpace(this.yRange);
             var xspace = this.GetSearchSpace(this.xRange);
 
-            for (int y = yspace * -1; y < yspace + 1; y++)
+            for (int y = yspace * -1; y < yspace; y++)
             {
-                for (int x = xspace * -1; x < xspace + 1; x++)
+                for (int x = xspace * -1; x < xspace; x++)
                 {
                     var result = this.Simulate(x, y);
                     highest = Math.Max(highest, result);
@@ -75,16 +75,16 @@ namespace AdventOfCode.Day17
         }
 
         // I'm not sure if this is correct, but it's better than my previous approach and I'm getting correct answers
-        private int GetSearchSpace((int Min, int Max) range) => Math.Max(Math.Abs(range.Min), Math.Abs(range.Max));
+        private int GetSearchSpace(Range range) => Math.Max(Math.Abs(range.Min), Math.Abs(range.Max)) + 1;
     }
+
+    public record Range(int Min, int Max);
 
     public record Postion(int X, int Y)
     {
         public Postion Add((int X, int Y) pos) => new Postion(this.X + pos.X, this.Y + pos.Y);
 
-        public Postion Add(Postion pos) => new Postion(this.X + pos.X, this.Y + pos.Y);
-
-        public bool Within((int Min, int Max) xRange, (int Min, int Max) yRange)
+        public bool Within(Range xRange, Range yRange)
         {
             return this.X >= xRange.Min &&
                 this.X <= xRange.Max &&
