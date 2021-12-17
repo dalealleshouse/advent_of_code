@@ -52,9 +52,11 @@ namespace AdventOfCode.Day16
 
         public int NumOfBits()
         {
+            var headerSize = this.GetHeaderSize();
+
             if (this.TypeId == 4)
             {
-                var pos = 6;
+                var pos = headerSize;
                 while (this.raw.Substring(pos, 1) != "0")
                 {
                     pos += 5;
@@ -65,10 +67,10 @@ namespace AdventOfCode.Day16
 
             if (this.GetLengthTypeId() == 0)
             {
-                return this.Get15BitSubPacketLength() + 7 + 15;
+                return this.Get15BitSubPacketLength() + headerSize;
             }
 
-            return this.SubPackets().Sum(x => x.NumOfBits()) + 7 + 11;
+            return this.SubPackets().Sum(x => x.NumOfBits()) + headerSize;
         }
 
         public IEnumerable<Packet> SubPackets()
@@ -83,7 +85,7 @@ namespace AdventOfCode.Day16
             {
                 var len = this.Get15BitSubPacketLength();
 
-                var subs = this.raw.Substring(22, len);
+                var subs = this.raw.Substring(this.GetHeaderSize(), len);
                 var pos = 0;
                 while (pos < len)
                 {
@@ -117,6 +119,21 @@ namespace AdventOfCode.Day16
 
         private int GetLengthTypeId() => Convert.ToInt32(this.raw.Substring(6, 1), 2);
 
+        private int GetHeaderSize()
+        {
+            if (this.TypeId == 4)
+            {
+                return 6;
+            }
+
+            if (this.GetLengthTypeId() == 0)
+            {
+                return 22;
+            }
+
+            return 18;
+        }
+
         private long GetLiteralValue()
         {
             if (this.TypeId != 4)
@@ -124,7 +141,7 @@ namespace AdventOfCode.Day16
                 return -1;
             }
 
-            var bits = this.raw.Substring(6, this.NumOfBits() - 6);
+            var bits = this.raw.Substring(this.GetHeaderSize(), this.NumOfBits() - this.GetHeaderSize());
             var val = string.Empty;
             var pos = 1;
             while (pos < bits.Length)
