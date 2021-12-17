@@ -90,10 +90,8 @@ namespace AdventOfCode.Day17
             }
         }
 
-        private int GetSearchSpace((int Min, int Max) range)
-        {
-            return Math.Max(Math.Abs(range.Min), Math.Abs(range.Max));
-        }
+        // I'm not sure if this is correct, but it's better than my previous approach and I'm getting correct answers
+        private int GetSearchSpace((int Min, int Max) range) => Math.Max(Math.Abs(range.Min), Math.Abs(range.Max));
     }
 
     public record Postion(int X, int Y)
