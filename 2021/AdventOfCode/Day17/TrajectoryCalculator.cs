@@ -13,51 +13,11 @@ namespace AdventOfCode.Day17
             this.yRange = yRange;
         }
 
-        public int DistinctVelocity()
-        {
-            var count = 0;
+        public int DistinctVelocity() => this.BruteForce().Unique;
 
-            var yspace = this.GetSearchSpace(this.yRange);
-            var xspace = this.GetSearchSpace(this.xRange);
+        public int HighestY() => this.BruteForce().High;
 
-            for (int y = yspace * -1; y < yspace + 1; y++)
-            {
-                for (int x = xspace * -1; x < xspace + 1; x++)
-                {
-                    var result = this.Simulate(x, y);
-                    if (result.Within)
-                    {
-                        count++;
-                    }
-                }
-            }
-
-            return count;
-        }
-
-        public int HighestY()
-        {
-            var highest = int.MinValue;
-
-            var yspace = this.GetSearchSpace(this.yRange);
-            var xspace = this.GetSearchSpace(this.xRange);
-
-            for (int y = yspace * -1; y < yspace + 1; y++)
-            {
-                for (int x = xspace * -1; x < xspace + 1; x++)
-                {
-                    var result = this.Simulate(x, y);
-                    if (result.Within)
-                    {
-                        highest = Math.Max(highest, result.MaxHeight);
-                    }
-                }
-            }
-
-            return highest;
-        }
-
-        public (bool Within, int MaxHeight) Simulate(int velX, int velY)
+        public int Simulate(int velX, int velY)
         {
             var pos = new Postion(0, 0);
             var maxH = int.MinValue;
@@ -80,14 +40,38 @@ namespace AdventOfCode.Day17
 
                 if (pos.Within(this.xRange, this.yRange))
                 {
-                    return (true, maxH);
+                    return maxH;
                 }
 
                 if (pos.X > this.xRange.Max || pos.Y < this.yRange.Min)
                 {
-                    return (false, 0);
+                    return int.MinValue;
                 }
             }
+        }
+
+        private (int High, int Unique) BruteForce()
+        {
+            int count = 0;
+            var highest = int.MinValue;
+
+            var yspace = this.GetSearchSpace(this.yRange);
+            var xspace = this.GetSearchSpace(this.xRange);
+
+            for (int y = yspace * -1; y < yspace + 1; y++)
+            {
+                for (int x = xspace * -1; x < xspace + 1; x++)
+                {
+                    var result = this.Simulate(x, y);
+                    highest = Math.Max(highest, result);
+                    if (result > int.MinValue)
+                    {
+                        count++;
+                    }
+                }
+            }
+
+            return (highest, count);
         }
 
         // I'm not sure if this is correct, but it's better than my previous approach and I'm getting correct answers
