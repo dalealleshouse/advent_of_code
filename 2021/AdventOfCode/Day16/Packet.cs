@@ -13,18 +13,21 @@ namespace AdventOfCode.Day16
             this.raw = raw;
             this.Version = this.GetVersion();
             this.TypeId = this.GetTypeId();
+            this.HeaderSize = this.GetHeaderSize();
         }
 
         public int Version { get; private set; }
 
         public int TypeId { get; private set; }
 
+        public int HeaderSize { get; private set; }
+
+        public long VersionSum() => this.Version + this.SubPackets().Sum(p => p.VersionSum());
+
         public long GetValue()
         {
             switch (this.TypeId)
             {
-                case 4:
-                    return this.GetLiteralValue();
                 case 0:
                     return this.SubPackets().Sum(p => p.GetValue());
                 case 1:
@@ -33,6 +36,8 @@ namespace AdventOfCode.Day16
                     return this.SubPackets().Min(p => p.GetValue());
                 case 3:
                     return this.SubPackets().Max(p => p.GetValue());
+                case 4:
+                    return this.GetLiteralValue();
                 case 5:
                     var gt1 = this.SubPackets().First().GetValue();
                     var gt2 = this.SubPackets().Last().GetValue();
@@ -50,29 +55,6 @@ namespace AdventOfCode.Day16
             }
         }
 
-        public int NumOfBits()
-        {
-            var headerSize = this.GetHeaderSize();
-
-            if (this.TypeId == 4)
-            {
-                var pos = headerSize;
-                while (this.raw.Substring(pos, 1) != "0")
-                {
-                    pos += 5;
-                }
-
-                return pos + 5;
-            }
-
-            if (this.GetLengthTypeId() == 0)
-            {
-                return this.Get15BitSubPacketLength() + headerSize;
-            }
-
-            return this.SubPackets().Sum(x => x.NumOfBits()) + headerSize;
-        }
-
         public IEnumerable<Packet> SubPackets()
         {
             // literals don't have sub packets
@@ -85,7 +67,7 @@ namespace AdventOfCode.Day16
             {
                 var len = this.Get15BitSubPacketLength();
 
-                var subs = this.raw.Substring(this.GetHeaderSize(), len);
+                var subs = this.raw.Substring(this.HeaderSize, len);
                 var pos = 0;
                 while (pos < len)
                 {
@@ -98,7 +80,7 @@ namespace AdventOfCode.Day16
             }
 
             var subpackets = this.Get11BitNumberofSubPackets();
-            var start = 18;
+            var start = this.HeaderSize;
 
             for (int i = 0; i < subpackets; i++)
             {
@@ -111,13 +93,45 @@ namespace AdventOfCode.Day16
             yield break;
         }
 
-        public long VersionSum() => this.Version + this.SubPackets().Sum(p => p.VersionSum());
+        private int NumOfBits()
+        {
+            if (this.TypeId == 4)
+            {
+                var pos = this.HeaderSize;
+                while (this.raw.Substring(pos, 1) != "0")
+                {
+                    pos += 5;
+                }
 
-        private int GetVersion() => Convert.ToInt32(this.raw.Substring(0, 3), 2);
+                return pos + 5;
+            }
 
-        private int GetTypeId() => Convert.ToInt32(this.raw.Substring(3, 3), 2);
+            if (this.GetLengthTypeId() == 0)
+            {
+                return this.Get15BitSubPacketLength() + this.HeaderSize;
+            }
 
-        private int GetLengthTypeId() => Convert.ToInt32(this.raw.Substring(6, 1), 2);
+            return this.SubPackets().Sum(x => x.NumOfBits()) + this.HeaderSize;
+        }
+
+        private long GetLiteralValue()
+        {
+            if (this.TypeId != 4)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var bits = this.raw.Substring(this.HeaderSize, this.NumOfBits() - this.HeaderSize);
+            var val = string.Empty;
+            var pos = 1;
+            while (pos < bits.Length)
+            {
+                val += bits.Substring(pos, 4);
+                pos += 5;
+            }
+
+            return Convert.ToInt64(val, 2);
+        }
 
         private int GetHeaderSize()
         {
@@ -134,29 +148,16 @@ namespace AdventOfCode.Day16
             return 18;
         }
 
-        private long GetLiteralValue()
-        {
-            if (this.TypeId != 4)
-            {
-                return -1;
-            }
-
-            var bits = this.raw.Substring(this.GetHeaderSize(), this.NumOfBits() - this.GetHeaderSize());
-            var val = string.Empty;
-            var pos = 1;
-            while (pos < bits.Length)
-            {
-                val += bits.Substring(pos, 4);
-                pos += 5;
-            }
-
-            return Convert.ToInt64(val, 2);
-        }
-
         private int Get15BitSubPacketLength() =>
             Convert.ToInt32(this.raw.Substring(7, 15), 2);
 
         private int Get11BitNumberofSubPackets() =>
             Convert.ToInt32(this.raw.Substring(7, 11), 2);
+
+        private int GetVersion() => Convert.ToInt32(this.raw.Substring(0, 3), 2);
+
+        private int GetTypeId() => Convert.ToInt32(this.raw.Substring(3, 3), 2);
+
+        private int GetLengthTypeId() => Convert.ToInt32(this.raw.Substring(6, 1), 2);
     }
 }
