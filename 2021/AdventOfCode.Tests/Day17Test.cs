@@ -1,6 +1,7 @@
 namespace AdventOfCode.Tests
 {
-    using System.Linq;
+    using System;
+    using AdventOfCode.Day17;
     using Xunit;
 
     public class Day17Test
@@ -8,39 +9,33 @@ namespace AdventOfCode.Tests
         [Fact]
         public void TestInput()
         {
-            /* Assert.Equal(6, new PacketParser("D2FE28").SumOfVersion()); */
-            /* Assert.Equal(9, new PacketParser("38006F45291200").SumOfVersion()); */
-            /* Assert.Equal(17, new PacketParser("8A004A801A8002F478").SumOfVersion()); */
-            /* Assert.Equal(14, new PacketParser("EE00D40C823060").SumOfVersion()); */
-            /* Assert.Equal(12, new PacketParser("620080001711562C8802118E34").SumOfVersion()); */
-
-            /* Assert.Equal(23, new PacketParser("C0015000017115A2E0802F182340").SumOfVersion()); */
-            /* Assert.Equal(31, new PacketParser("A0017C880172017C3686B18A3D4780").SumOfVersion()); */
+            /* target area: x=20..30, y=-10..-5 */
+            var sut = new TrajectoryCalculator((20, 30), (-10, -5));
+            Assert.Equal(45, sut.HighestY());
         }
 
         [Fact]
         public void PuzzelOne()
         {
-            /* Assert.Equal(979, new PacketParser(InputParser.ParseString("input_data/day17-1.txt").First()).SumOfVersion()); */
+            /* target area: x=111..161, y=-154..-101 */
+            var sut = new TrajectoryCalculator((111, 161), (-154, -101));
+            Assert.Equal(11781, sut.HighestY());
         }
 
         [Fact]
         public void TestInputTwo()
         {
-            /* Assert.Equal(3, new PacketParser("C200B40A82").Calculate()); */
-            /* Assert.Equal(54, new PacketParser("04005AC33890").Calculate()); */
-            /* Assert.Equal(7, new PacketParser("880086C3E88112").Calculate()); */
-            /* Assert.Equal(9, new PacketParser("CE00C43D881120").Calculate()); */
-            /* Assert.Equal(1, new PacketParser("D8005AC2A8F0").Calculate()); */
-            /* Assert.Equal(0, new PacketParser("F600BC2D8F").Calculate()); */
-            /* Assert.Equal(0, new PacketParser("9C005AC2F8F0").Calculate()); */
-            /* Assert.Equal(1, new PacketParser("9C0141080250320F1802104A08").Calculate()); */
+            /* target area: x=20..30, y=-10..-5 */
+            var sut = new TrajectoryCalculator((20, 30), (-10, -5));
+            Assert.Equal(112, sut.DistinctVelocity());
         }
 
         [Fact]
         public void PuzzelTwo()
         {
-            /* Assert.Equal(277110354175, new PacketParser(InputParser.ParseString("input_data/day17-1.txt").First()).Calculate()); */
+            /* target area: x=111..161, y=-154..-101 */
+            var sut = new TrajectoryCalculator((111, 161), (-154, -101));
+            Assert.Equal(4531, sut.DistinctVelocity());
         }
     }
 }

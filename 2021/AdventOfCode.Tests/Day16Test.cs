@@ -14,7 +14,6 @@ namespace AdventOfCode.Tests
             Assert.Equal(16, PacketFactory.CreatePacket("8A004A801A8002F478").VersionSum());
             Assert.Equal(14, PacketFactory.CreatePacket("EE00D40C823060").VersionSum());
             Assert.Equal(12, PacketFactory.CreatePacket("620080001611562C8802118E34").VersionSum());
-
             Assert.Equal(23, PacketFactory.CreatePacket("C0015000016115A2E0802F182340").VersionSum());
             Assert.Equal(31, PacketFactory.CreatePacket("A0016C880162017C3686B18A3D4780").VersionSum());
         }
