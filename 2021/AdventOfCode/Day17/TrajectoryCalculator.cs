@@ -73,7 +73,7 @@ namespace AdventOfCode.Day17
                 {
                     velX -= 1;
                 }
-                else if (pos.X < 0)
+                else if (velX < 0)
                 {
                     velX += 1;
                 }
